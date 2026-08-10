@@ -342,3 +342,105 @@ select * from orders
 
 select *
 from orders_archived
+
+use sql_store;
+
+insert into orders_archived
+select *
+from orders
+where order_date < '2019-01-01'
+
+-- exercise
+
+use sql_invoicing;
+
+create table invoice_archived as
+select 
+      i.invoice_id, 
+      i.number,
+      c.name,
+      i.invoice_total,
+      i.payment_total,
+      i.invoice_date,
+      i.due_date,
+      i.payment_date
+from invoices i
+join clients c
+    using (client_id)
+where payment_date is not null
+
+-- updating data in a single row
+
+update invoices
+set payment_total = default, payment_date = null
+where invoice_id = 1;
+
+update invoices
+set
+    payment_total = invoice_total * 0.5, 
+    payment_date = due_date
+where invoice_id = 3;
+
+-- updating multiple rows
+
+update invoices
+set
+    payment_total = invoice_total * 0.5, 
+    payment_date = due_date
+where client_id in (3, 4);
+
+
+-- exercise
+
+use sql_store;
+
+update customers
+set points = points + 50
+where birth_date <= '1990-01-01';
+
+-- using subqueries in updates
+
+use sql_invoicing;
+
+update invoices
+set
+    payment_total = invoice_total * 0.5, 
+    payment_date = due_date
+where invoice_id IN
+     (select client_id
+      from clients
+       where state in ('CA', 'NY'));
+       
+update invoices
+set
+    payment_total = invoice_total * 0.5, 
+    payment_date = due_date
+where payment_date is null;
+     
+-- exercise
+
+use sql_store;
+
+update orders
+set 
+   comments = 'GOLD CUSTOMER'
+where  customer_id in 
+     (select customer_id
+      from customers
+      where points >= 3000);
+
+-- DELETING ROWS
+
+use sql_invoicing;
+
+delete from invoices
+where client_id =
+     (select *
+      from clients
+      where name = 'Myworks')
+
+      
+
+
+      
+      
