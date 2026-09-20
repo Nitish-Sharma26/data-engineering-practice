@@ -1,0 +1,6 @@
+{
+    "terminal.integrated.shellIntegration.enabled": false,
+    "terminal.integrated.gpuAcceleration": "off",
+    "python.terminal.executeInFileDir": true,
+    "editor.find.loop": false
+}
